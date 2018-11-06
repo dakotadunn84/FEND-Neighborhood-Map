@@ -27,7 +27,14 @@ handleMarkerCLick = (marker) => {
   this.closeAllMarkers();
   marker.isOpen = true;
   this.setState({markers: Object.assign(this.state.markers, marker) });
-}
+  const venue = this.state.venues.find(venue => venue.id === marker.id);
+
+  SquareAPI.getVenueDetails(marker.id).then(res => {
+    const newVenue = Object.assign(venue, res.response.venue);
+      this.setState({venues: Object.assign(this.state.venues, newVenue) });
+  });
+
+};
 
   componentDidMount(){
     SquareAPI.search({
@@ -42,7 +49,8 @@ handleMarkerCLick = (marker) => {
           lat: venue.location.lat,
           lng: venue.location.lng,
           isOpen:false,
-          isVisible:true
+          isVisible:true,
+          id:venue.id
         };
       });
       this.setState({venues, center, markers})
