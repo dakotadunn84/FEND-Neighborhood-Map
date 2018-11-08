@@ -5,13 +5,20 @@ export default class SideBar extends Component {
     constructor() {
         super();
         this.state = {
-            query: ""
+            query: "",
+            venues:[]
         };
     }
     
-    handleFilterVenues = () => {
-
-    };
+     handleFilterVenues = () => {
+         if(this.state.query.trim() !== "") {
+             const venues = this.props.venues.filter(venue => 
+                 venue.name.toLowerCase().includes(this.state.query.toLowerCase())
+            );
+             return venues;
+         }
+         return this.props.venues;
+     };
     
     handleChange = e => {
         this.setState({query:e.target.value});
@@ -33,7 +40,7 @@ export default class SideBar extends Component {
     render () {
         return (<div className="sideBar">
             <input type={"search"} id={"search"} placeholder={"Filter Venues"} onChange={this.handleChange}/>
-            <VenueList {...this.props} handleListItemClick={this.props.handleListItemClick}/>
+            <VenueList {...this.props} venues={this.handleFilterVenues()} handleListItemClick={this.props.handleListItemClick}/>
         </div>);
     }
 
