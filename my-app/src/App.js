@@ -12,7 +12,10 @@ class App extends Component {
       venues:[],
       markers:[],
       center: [],
-      zoom: 12
+      zoom: 12,
+      updateSuperState: obj => {
+        this.setState(obj);
+      }
     };
   }
 
@@ -28,7 +31,7 @@ handleMarkerCLick = (marker) => {
   this.closeAllMarkers();
   marker.isOpen = true;
   this.setState({markers: Object.assign(this.state.markers, marker) });
-  const venue = this.state.venues.find(venue => venue.id === marker.id);
+  const venue = this.state.venues.find(venue => venue.id == marker.id);
 
   SquareAPI.getVenueDetails(marker.id).then(res => {
     const newVenue = Object.assign(venue, res.response.venue);
@@ -36,6 +39,11 @@ handleMarkerCLick = (marker) => {
   });
 
 };
+
+handleListItemClick = venue => {
+  const marker = this.state.markers.find(marker => marker.id === venue.id);
+  this.handleMarkerCLick(marker);
+}
 
   componentDidMount(){
     SquareAPI.search({
@@ -62,7 +70,7 @@ handleMarkerCLick = (marker) => {
   render() {
     return (
       <div className="App">
-        <SideBar/>
+        <SideBar {...this.state} handleListItemClick={this.handleListItemClick}/>
         <Map {...this.state} handleMarkerCLick={this.handleMarkerCLick} />
       </div>
     );
