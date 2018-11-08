@@ -48,8 +48,8 @@ handleListItemClick = venue => {
   componentDidMount(){
     SquareAPI.search({
       near:"San Diego, CA",
-      query:"sushi",
-      limit: 10
+      query:"Golf",
+      limit: 6
     }).then(results => {
       const {venues} = results.response;
       const {center} = results.response.geocode.feature.geometry;
